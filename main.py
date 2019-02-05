@@ -15,20 +15,39 @@ def main():
     led = Pin(2, Pin.OUT)
     dt = 0
     ip = network.WLAN(network.STA_IF).ifconfig()[0]
+    dx = 0  # Dot position on the bottom of the screen
+    tc = 0  # Timer counts
+    t = 0  # Temp
+    at = 0  # ADC time
 
     while True:
         st = tmr.ticks_ms()
-        led.off() # Reversed
+
+        if tc == 0:
+            led.off()  # Reversed
+            t = str("%.1f" % lm35.get_temp())
+            print('Temp: ' + t + 'c Time: ' + str(dt) + 'ms')
+            led.on()  # Reversed
+            at = tmr.ticks_diff(tmr.ticks_ms(), st)
+
+        tc += 1
+        if tc == 19:
+            tc = 0
+
+        tmr.sleep_ms(8 - at)  # Roughly 50ms a tick
+
         oled.fill(0)
-        t = str("%.1f" % lm35.get_temp())
         oled.text('IP: ' + ip, 0, 0)
         oled.text('Temp: ' + t + 'c', 0, 10)
-        oled.text('Time: ' + str(dt) + 'ms', 0, 20)
+        oled.text('at: ' + str (at) + 'ms dt: ' + str(dt) + 'ms', 0, 20)
+        oled.pixel(dx,31,1)
         oled.show()
-        led.on() # Reversed
-        dt = tmr.ticks_diff(tmr.ticks_ms(),st)
-        print('Temp: ' + t + 'c Time: ' + str(dt) + 'ms')
-        tmr.sleep_ms(500)
+
+        dx += 1
+        if dx == 127:
+            dx = 0
+
+        dt = tmr.ticks_diff(tmr.ticks_ms(), st)
 
 
 if __name__ == '__main__':
