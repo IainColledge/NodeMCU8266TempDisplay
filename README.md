@@ -19,8 +19,8 @@ GND | GND |
 A0  | Vout |
 3V3 |     | VCC
 GND |     | GND
-D1  |     | SDA
-D2  |     | SCL
+D1  |     | SCL
+D2  |     | SDA
 
 A wired up example is shown below.
 
