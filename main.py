@@ -4,7 +4,8 @@
 
 import utime, ssd1306
 from machine import I2C, Pin
-from esp8266 import lm35
+from esp8266 import adc
+import lm35
 import network
 
 
@@ -25,7 +26,7 @@ def main():
 
         if tc == 0:
             led.off()  # Reversed
-            t = str("%.1f" % lm35.get_temp())
+            t = str("%.1f" % lm35.get_temp(adc))
             print('Temp: ' + t + 'c Time: ' + str(dt) + 'ms')
             led.on()  # Reversed
             at = tmr.ticks_diff(tmr.ticks_ms(), st)
